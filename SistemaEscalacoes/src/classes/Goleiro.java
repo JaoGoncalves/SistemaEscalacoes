@@ -9,7 +9,7 @@ public class Goleiro extends Jogador {
     }
 
     @Override
-    public String getPosicao() { // aqui houve a sobrecarga do metodo da Classe jogador
+    public String getPosicao() { // metodo sobrescrito da Classe jogador
         return "Goleiro"; // irá retornar a posicao do jogador
     }
 }

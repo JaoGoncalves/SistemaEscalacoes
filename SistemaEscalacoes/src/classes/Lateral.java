@@ -8,7 +8,7 @@ public class Lateral extends Jogador {
     }
 
     @Override
-    public String getPosicao() { // aqui houve a sobrecarga do metodo da Classe jogador
+    public String getPosicao() { // metodo sobrescrito da Classe jogador
         return "Lateral"; // irá retornar a posicao do jogador
     }
 
