@@ -1,14 +1,15 @@
 package classes;
 
 public class Lateral extends Jogador {
-
-    public Lateral(String nome, int numero) throws NumeroInvalidoException {
+    // criação do construtor sobrecarregado
+    public Lateral(String nome, int numero) throws NumeroInvalidoException { // lança a exceção, caso o número digitado
+                                                                             // não atenda os requisitos
         super(nome, numero);
     }
 
     @Override
-    public String getPosicao() {
-        return "Lateral";
+    public String getPosicao() { // aqui houve a sobrecarga do metodo da Classe jogador
+        return "Lateral"; // irá retornar a posicao do jogador
     }
 
 }

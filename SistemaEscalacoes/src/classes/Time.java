@@ -32,19 +32,23 @@ public class Time implements Escalacao {
     @Override
     public void removerJogador(int numero) throws ExceptionEscalacao {
         if (numero > 0 && numero < 100) {
-            escalacao.remove(numero);
+            escalacao.removeIf(jogador -> jogador.getNumero() == numero);
+            System.out.println("Jogador número " + numero + " removido");
         } else {
             throw new ExceptionEscalacao("Jogador não encontrado.");
         }
-        System.out.println("Jogador número: " + numero + " removido");
 
     }
 
     @Override
     public void imprimeEscalacao() {
-        System.out.println("A escalação " + getNomeEquipe() + ", vem com os seguintes jogadores: ");
-        for (Jogador jogador : escalacao) {
-            System.out.println(jogador.getNome() + ",N:" + jogador.getNumero());
+        if (escalacao.size() == 11) {
+            System.out.println("A escalação " + getNomeEquipe() + ", vem com os seguintes jogadores: ");
+            for (Jogador jogador : escalacao) {
+                System.out.println(jogador.getNome() + ",N:" + jogador.getNumero());
+            }
+        } else {
+            System.out.println("Escalação Incompleta. Seu time deve conter 11 jogadores!");
         }
     }
 
