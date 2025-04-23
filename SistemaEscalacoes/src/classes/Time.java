@@ -3,9 +3,12 @@ package classes;
 import java.util.ArrayList;
 
 public class Time implements Escalacao {
+    // Atributos
     private String nomeEquipe;
+    // Criação do ArrayList, já instanciado
     private ArrayList<Jogador> escalacao = new ArrayList<>();
 
+    // construtor
     public Time() {
         this.nomeEquipe = getNomeEquipe();
     }
