@@ -22,6 +22,8 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 ## 🧱 Estrutura de Diretórios
 
 EscalacaoFutebol/
+
+
 ├── src/
 │   ├── Jogador.java
 │   ├── Goleiro.java
