@@ -15,6 +15,7 @@ public class EscalarTime {
         int quantidade = Integer.parseInt(quantidadetxt); // converte a string para inteiro
         // validação da quantidade de jogadores
         if (quantidade < 11 || quantidade > 11) {
+
             JOptionPane.showMessageDialog(null, "Sua escalação deve conter 11 jogadores.");
         } else {
             // for para escalar jogadores

@@ -60,8 +60,8 @@ public class Time implements Escalacao {
                     .append(" vem com os seguintes jogadores:\n\n");
 
             for (Jogador jogador : escalacao) {
-                mensagem.append(jogador.getNome() + " N" + jogador.getNumero()).append("\n"); // imprime o jogador
-                                                                                              // escalado
+                mensagem.append(jogador.getNome() + " Numero:" + jogador.getNumero()).append("\n"); // imprime o jogador
+                // escalado
             }
 
             JOptionPane.showMessageDialog(null, mensagem.toString());
