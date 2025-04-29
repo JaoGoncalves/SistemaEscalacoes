@@ -11,7 +11,7 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 - Listar jogadores escalados.
 - Remover jogadores por número.
 - Validação de número do jogador (apenas entre 1 e 99).
-- Tratamento de exceções (inclusive personalizadas).
+- Tratamento de exceções.
 
 ---
 
