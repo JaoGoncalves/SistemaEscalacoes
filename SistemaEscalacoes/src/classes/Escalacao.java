@@ -4,7 +4,7 @@ package classes;
 public interface Escalacao {
     // criação do metodo escalar(irá adicionar um novo jogador), que sera chamado na
     // classe Time
-    public void escalar(Jogador jogador) throws ExceptionEscalacao;
+    public void escalarJogador(Jogador jogador) throws ExceptionEscalacao;
 
     // nesse método, iremos remover um jogador especifico
     public void removerJogador(int numero) throws ExceptionEscalacao;

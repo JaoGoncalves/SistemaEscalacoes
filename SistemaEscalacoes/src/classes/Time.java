@@ -25,7 +25,7 @@ public class Time implements Escalacao {
 
     @Override
     // método sobrescrito, passando um paramêtro da classe Jogador
-    public void escalar(Jogador jogador) throws ExceptionEscalacao { // chamada da exceção personalizada
+    public void escalarJogador(Jogador jogador) throws ExceptionEscalacao { // chamada da exceção personalizada
 
         if (escalacao.size() > 11) { // caso o usuário adicione mais que 11 jogadores, entra nessa condição
             // lança a exceção
