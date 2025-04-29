@@ -21,7 +21,7 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 ## 🧱 Estrutura de Diretórios
 
-
+```
 ├── src/classes
 ├── Jogador.java               # Classe abstrata base
 ├── Escalacao.java             # Interface comum com métodos de simulação
@@ -32,6 +32,7 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 ├── Atacante.java              # Subclasse que Herda da Classe Abstrata (Jogador)
 ├── NumeroInvalidoException.java # Exceção Personalida
 └── EscalarTime.java # Classe principal (main)
+```
 
 
 
