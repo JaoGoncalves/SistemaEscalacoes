@@ -19,3 +19,18 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 1. 
 
+
+EscalacaoFutebol/
+├── src/
+│   ├── Jogador.java
+│   ├── Goleiro.java
+│   ├── Zagueiro.java
+│   ├── Atacante.java
+│   ├── Time.java
+│   ├── Escalavel.java
+│   ├── EscalacaoException.java
+│   ├── NumeroInvalidoException.java
+│   └── Main.java
+└── README.md
+
+
