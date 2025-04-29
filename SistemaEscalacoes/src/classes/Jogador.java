@@ -6,14 +6,8 @@ abstract class Jogador {
     protected int numero;
 
     // cria o construtor
-    public Jogador(String nome, int numero) throws NumeroInvalidoException { // chamada da exceção
+    public Jogador(String nome, int numero) {
         this.nome = nome;
-        if (numero < 0 || numero > 99) { // Exceção caso o numero seja negativo, ou maior que 99, segundo regras os
-                                         // números devem ir de 1 a 99.
-
-            throw new NumeroInvalidoException( // lança a exceção
-                    "Não é permitido esse tipo de numeração. O número do jogador deve estar entre 1 e 99.");
-        }
         this.numero = numero;
     }
 

@@ -2,6 +2,8 @@ package classes;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class Time implements Escalacao {
     // Atributos
     private String nomeEquipe;
@@ -27,11 +29,6 @@ public class Time implements Escalacao {
     // método sobrescrito, passando um paramêtro da classe Jogador
     public void escalarJogador(Jogador jogador) throws ExceptionEscalacao { // chamada da exceção personalizada
 
-        if (escalacao.size() > 11) { // caso o usuário adicione mais que 11 jogadores, entra nessa condição
-            // lança a exceção
-            throw new ExceptionEscalacao("Não é permitido escalar mais de 11 jogadores.");
-        }
-        // se a condição acima nao for requisitada
         escalacao.add(jogador); // adiciona o jogador no ArrayList
 
         // imprime o nome do jogador, sua posição e número
@@ -56,13 +53,20 @@ public class Time implements Escalacao {
     @Override
     // método sobrescrito da interface Escalacao
     public void imprimeEscalacao() { // irá imprimir a escalação
-        if (escalacao.size() == 11) { // caso o nº de jogadores seja menor que 11, ele nao imprime e cai no else
-            System.out.println("A escalação " + getNomeEquipe() + ", vem com os seguintes jogadores: ");
-            for (Jogador jogador : escalacao) { // foreach, para percorrer a lista e imprimir cada jogador e seu nº
-                System.out.println(jogador.getNome() + ",N:" + jogador.getNumero());
+
+        if (escalacao.size() == 11) {
+            StringBuilder mensagem = new StringBuilder();
+            mensagem.append("A escalação do time ").append(getNomeEquipe())
+                    .append(" vem com os seguintes jogadores:\n\n");
+
+            for (Jogador jogador : escalacao) {
+                mensagem.append(jogador.getNome() + " N" + jogador.getNumero()).append("\n"); // imprime o jogador
+                                                                                              // escalado
             }
-        } else { // irá imprimir a mensagem abaixo
-            System.out.println("Escalação Incompleta. Seu time deve conter 11 jogadores!");
+
+            JOptionPane.showMessageDialog(null, mensagem.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Escalação Incompleta. Seu time deve conter 11 jogadores!");
         }
     }
 
