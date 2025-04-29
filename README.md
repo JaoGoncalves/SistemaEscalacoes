@@ -19,19 +19,22 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 
 
-## 🧱 Estrutura de Diretórios
+## 🧱 Estrutura de Classes
 
 ```
+EscalacaoFutebol/
 ├── src/classes
-├── Jogador.java               # Classe abstrata base
-├── Escalacao.java             # Interface comum com métodos de simulação
-├── ExceptionEscalacao.java    # Classe que contém a Exceção Personalizada
-├── Goleiro.java               # Subclasse que Herda da Classe Abstrata (Jogador)
-├── Lateral.java               # Subclasse que Herda da Classe Abstrata (Jogador)
-├── MeioCampo.java             # Subclasse que Herda da Classe Abstrata (Jogador)
-├── Atacante.java              # Subclasse que Herda da Classe Abstrata (Jogador)
-├── NumeroInvalidoException.java # Exceção Personalida
-└── EscalarTime.java # Classe principal (main)
+│   ├── Jogador.java
+│   ├── Goleiro.java
+│   ├── Zagueiro.java
+│   ├── Atacante.java
+│   ├── Time.java
+│   ├── Escalavel.java
+│   ├── EscalacaoException.java
+│   ├── NumeroInvalidoException.java
+│   └── Main.java
+└── README.md
+
 ```
 
 
