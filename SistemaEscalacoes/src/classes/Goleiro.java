@@ -3,8 +3,7 @@ package classes;
 public class Goleiro extends Jogador {
 
     // criação do construtor sobrecarregado
-    public Goleiro(String nome, int numero) throws NumeroInvalidoException { // lança exceção caso o número digitado não
-                                                                             // atenda os requisitos
+    public Goleiro(String nome, int numero)  {
         super(nome, numero);
     }
 
