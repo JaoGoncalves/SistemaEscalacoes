@@ -37,7 +37,7 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 │   ├── Atacante.java                  # SubClasse
 │   ├── Time.java                      # Classe para implementar métodos da interface Escalação
 │   ├── Escalação.java                 # Interface com métodos
-│   ├── EscalacaoException.java        # Exceção Personalizada
+│   ├── ExceptionEscalacao.java        # Exceção Personalizada
 │   ├── NumeroInvalidoException.java   # Exceção personalizada
 │   └── EscalarTime.java               # Classe principal (main)
 └── README.md
