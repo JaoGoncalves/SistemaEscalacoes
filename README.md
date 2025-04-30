@@ -1,6 +1,6 @@
 # Sistema de Escalação de Jogadores de Futebol ⚽
 
-Este projeto Java é um sistema de escalação de jogadores de futebol que permite ao usuário montar a escalação de um time, adicionar jogadores por posição, listar os escalados, e remover jogadores por número. O sistema foi desenvolvido aplicando os principais conceitos de **Programação Orientada a Objetos**, como **Herança**, **Polimorfismo**, **interfaces**, **listas genéricas** e **tratamento de Exceções**.
+Este projeto Java é um sistema de escalação de jogadores de futebol que permite ao usuário montar a escalação de um time, adicionar jogadores por posição, listar os escalados, e remover jogadores por número. O sistema foi desenvolvido aplicando os principais conceitos de **Programação Orientada a Objetos**, como **Herança**, **Polimorfismo**, **interfaces**, **Collections(`ArrayList`)** e **Tratamento de Exceções**.
 
 ---
 
@@ -8,8 +8,8 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 - Inserir nome do time no início da execução.
 - Escalar jogadores em posições específicas (Goleiro, Zagueiro, Lateral, Meio Campo, Atacante).
-- Listar jogadores escalados.
 - Remover jogadores por número.
+- Imprimir lista com jogadores escalados
 - Validação de número do jogador (apenas entre 1 e 99).
 - Tratamento de exceções.
 
@@ -26,7 +26,7 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 ## 🧱 Estrutura de Classes
 
-```bash
+```
 
 ├── src/classes
 │   ├── Jogador.java                   # Classe Abstrata base
@@ -47,13 +47,31 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 ## 📊 Diagrama UML
 
- (![image](https://github.com/user-attachments/assets/9f62d4ce-454f-4ff9-bb44-a01737d969cb)
+ ![image](https://github.com/user-attachments/assets/9f62d4ce-454f-4ff9-bb44-a01737d969cb)
 
 
 
 ---
 
 ## ✅ Conceitos Aplicados
+
+- ✅ Herança (Implementado na classe `Jogador`)
+- ✅ Polimorfismo (implementação diversa em cada classe herdada da classe Jogador)
+- ✅ Interface (`Escalacao`)
+- ✅ Classe abstrata (`Jogador`)
+- ✅ Collections (`ArrayList`)
+- ✅ Métodos adiciona e remove jogadores
+- ✅ Interface gráfica (`JOptionPane`)
+
+---
+## ⚒️Ferramentas utilizadas
+
+  - Java SE 21
+  - VSCode
+  - Astah UML
+  - Swing `JOoptionPane`
+
+---
 
 
 
