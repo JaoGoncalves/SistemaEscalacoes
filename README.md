@@ -63,6 +63,7 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 - ✅ Collections (`ArrayList`)
 - ✅ Métodos adiciona e remove jogadores
 - ✅ Interface gráfica (`JOptionPane`)
+- ✅ Exceptions Personalizadas (`NumeroInvalidoException`, `ExceptionEscalacao`)
 
 ---
 ## ⚒️Ferramentas utilizadas
