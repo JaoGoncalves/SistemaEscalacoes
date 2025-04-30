@@ -2,8 +2,7 @@ package classes;
 
 public class Zagueiro extends Jogador {
     // criação do construtor sobrecarregado
-    public Zagueiro(String nome, int numero) throws NumeroInvalidoException { // lança a exceção caso o número digitado
-                                                                              // nao atenda os requisitos
+    public Zagueiro(String nome, int numero) { 
         super(nome, numero);
     }
 
