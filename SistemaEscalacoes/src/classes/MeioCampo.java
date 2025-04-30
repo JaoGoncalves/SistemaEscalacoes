@@ -2,8 +2,7 @@ package classes;
 
 public class MeioCampo extends Jogador {
     // criação do construtor sobrecarregado
-    public MeioCampo(String nome, int numero) throws NumeroInvalidoException { // lança a exceção, caso o número
-                                                                               // digitado não atenda os requisitos
+    public MeioCampo(String nome, int numero)  {
         super(nome, numero);
     }
 
