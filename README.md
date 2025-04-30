@@ -47,7 +47,8 @@ Este projeto Java é um sistema de escalação de jogadores de futebol que permi
 
 ## 📊 Diagrama UML
 
- ![image](https://github.com/user-attachments/assets/9f62d4ce-454f-4ff9-bb44-a01737d969cb)
+ (![image](https://github.com/user-attachments/assets/eb9a2f83-0cbc-4a3c-b493-9e9f2c267fdd)
+
 
 
 
