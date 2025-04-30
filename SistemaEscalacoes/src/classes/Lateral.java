@@ -2,8 +2,7 @@ package classes;
 
 public class Lateral extends Jogador {
     // criação do construtor sobrecarregado
-    public Lateral(String nome, int numero) throws NumeroInvalidoException { // lança a exceção, caso o número digitado
-                                                                             // não atenda os requisitos
+    public Lateral(String nome, int numero){ 
         super(nome, numero);
     }
 
