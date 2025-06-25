@@ -320,13 +320,23 @@ public class TelaCadastro extends JFrame {
             limparTudo(null);
 
         } catch (SQLException ex) {
-            String mensagem = ex.getMessage().contains("UNIQUE constraint failed") ?
-                    "Já existe um time com este nome!" :
-                    "Erro ao salvar no banco de dados: " + ex.getMessage();
 
+            String mensagem;
+            // Verificação MELHORADA: procura pela mensagem específica do MySQL "Duplicate entry"
+            if (ex.getMessage() != null && ex.getMessage().contains("Duplicate entry")) {
+                // Pega o nome do time que o usuário digitou para dar uma mensagem clara
+                String nomeTime = txtNomeTime.getText().trim();
+                mensagem = "Já existe um time cadastrado com o nome '" + nomeTime + "'!";
+
+            } else {
+                // Para qualquer outro erro de banco de dados
+                mensagem = "Ocorreu um erro inesperado no banco de dados.";
+                // Imprime o erro completo no console para podermos investigar se necessário
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(this,
                     mensagem,
-                    "Erro",
+                    "Erro ao Salvar",
                     JOptionPane.ERROR_MESSAGE);
         }
     }

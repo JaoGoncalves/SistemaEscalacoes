@@ -39,9 +39,9 @@ public class TelaPrincipal extends JFrame {
         gbc.insets = new Insets(20, 20, 20, 20);
 
         // Botões do menu
-        JButton btnCadastrar = createMenuButton("📝 CADASTRAR TIME", new Color(70, 130, 180));
-        JButton btnConsultar = createMenuButton("🔍 CONSULTAR TIMES", new Color(60, 179, 113));
-        JButton btnGerenciar = createMenuButton("⚙️ GERENCIAR TIMES", new Color(255, 140, 0));
+        JButton btnCadastrar = createMenuButton("CADASTRAR TIME", new Color(70, 130, 180));
+        JButton btnConsultar = createMenuButton("CONSULTAR TIMES", new Color(60, 179, 113));
+        JButton btnGerenciar = createMenuButton("GERENCIAR TIMES", new Color(255, 140, 0));
         JButton btnSair = createMenuButton("🚪 SAIR", new Color(220, 20, 60));
 
         // Posicionamento dos botões

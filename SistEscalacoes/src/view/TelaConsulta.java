@@ -21,7 +21,7 @@ public class TelaConsulta extends JFrame {
     public TelaConsulta() {
         timeDAO = new TimeDAO();
         initComponents();
-        carregarTimes();
+        //carregarTimes();
     }
 
     private void initComponents() {
@@ -35,7 +35,7 @@ public class TelaConsulta extends JFrame {
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(60, 179, 113));
         headerPanel.setPreferredSize(new Dimension(1000, 80));
-        JLabel headerLabel = new JLabel("🔍 CONSULTAR TIMES E ESCALAÇÕES", JLabel.CENTER);
+        JLabel headerLabel = new JLabel("CONSULTAR TIMES E ESCALAÇÕES", JLabel.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         headerLabel.setForeground(Color.WHITE);
         headerPanel.add(headerLabel);
@@ -71,7 +71,7 @@ public class TelaConsulta extends JFrame {
         txtBusca.setFont(new Font("Arial", Font.PLAIN, 14));
         panel.add(txtBusca);
 
-        JButton btnBuscar = new JButton("🔍 Buscar");
+        JButton btnBuscar = new JButton("Buscar");
         btnBuscar.setBackground(new Color(70, 130, 180));
         btnBuscar.setForeground(Color.WHITE);
         btnBuscar.setBorderPainted(false);
@@ -79,7 +79,7 @@ public class TelaConsulta extends JFrame {
         btnBuscar.addActionListener(this::buscarTime);
         panel.add(btnBuscar);
 
-        JButton btnListarTodos = new JButton("📋 Listar Todos");
+        JButton btnListarTodos = new JButton("Listar Todos");
         btnListarTodos.setBackground(new Color(255, 140, 0));
         btnListarTodos.setForeground(Color.WHITE);
         btnListarTodos.setBorderPainted(false);
@@ -154,7 +154,7 @@ public class TelaConsulta extends JFrame {
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout());
 
-        JButton btnVoltar = new JButton("🏠 VOLTAR");
+        JButton btnVoltar = new JButton("VOLTAR");
         btnVoltar.setPreferredSize(new Dimension(120, 40));
         btnVoltar.setBackground(new Color(128, 128, 128));
         btnVoltar.setForeground(Color.WHITE);

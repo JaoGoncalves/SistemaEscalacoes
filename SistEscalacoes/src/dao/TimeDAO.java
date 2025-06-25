@@ -53,7 +53,7 @@ public class TimeDAO {
         }
     }
 
-    // NOVO MÉTODO: Necessário para a TelaGerenciamento corrigida
+
     public void removerTimePorNome(String nome) throws SQLException {
         Time time = buscarTimePorNome(nome);
         if (time != null) {
@@ -63,7 +63,7 @@ public class TimeDAO {
 
     public List<Time> listarTimes() throws SQLException {
         List<Time> times = new ArrayList<>();
-        String sql = "SELECT * FROM times ORDER BY nome"; // Adicionado ORDER BY para consistência
+        String sql = "SELECT * FROM times ORDER BY nome";
 
         try (Connection conn = DataBaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -73,10 +73,10 @@ public class TimeDAO {
                 int timeId = rs.getInt("id");
                 String nomeTime = rs.getString("nome");
 
-                Time time = new Time(timeId, nomeTime); // Cria o time com ID e nome
+                Time time = new Time(timeId, nomeTime);
 
                 List<Jogador> jogadores = buscarJogadoresDoTime(timeId);
-                time.setEscalacao(jogadores); // Define a lista de jogadores no objeto time
+                time.setEscalacao(jogadores);
 
                 times.add(time);
             }
@@ -127,20 +127,23 @@ public class TimeDAO {
         List<Jogador> jogadores = new ArrayList<>();
         String sql = "SELECT * FROM jogadores WHERE time_id = ?";
 
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        // Pegamos a conexão fora do try-with-resources para não fechá-la
+        Connection conn = DataBaseConnection.getConnection();
 
+        // O try-with-resources agora gerencia apenas o PreparedStatement e o ResultSet
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, timeId);
-            ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                String nome = rs.getString("nome");
-                int numero = rs.getInt("numero");
-                String posicao = rs.getString("posicao");
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    int numero = rs.getInt("numero");
+                    String posicao = rs.getString("posicao");
 
-                Jogador jogador = criarJogadorPorPosicao(nome, numero, posicao);
-                if (jogador != null) {
-                    jogadores.add(jogador);
+                    Jogador jogador = criarJogadorPorPosicao(nome, numero, posicao);
+                    if (jogador != null) {
+                        jogadores.add(jogador);
+                    }
                 }
             }
         }

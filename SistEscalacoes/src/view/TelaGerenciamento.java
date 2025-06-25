@@ -35,7 +35,7 @@ public class TelaGerenciamento extends JFrame {
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(255, 140, 0));
         headerPanel.setPreferredSize(new Dimension(1200, 80));
-        JLabel headerLabel = new JLabel("⚙️ GERENCIAR TIMES E ESCALAÇÕES", JLabel.CENTER);
+        JLabel headerLabel = new JLabel("GERENCIAR TIMES E ESCALAÇÕES", JLabel.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         headerLabel.setForeground(Color.WHITE);
         headerPanel.add(headerLabel);
@@ -95,14 +95,14 @@ public class TelaGerenciamento extends JFrame {
         // Botões para times
         JPanel buttonTimesPanel = new JPanel(new FlowLayout());
 
-        JButton btnEditarTime = new JButton("✏️ Editar Nome");
+        JButton btnEditarTime = new JButton("Editar Nome");
         btnEditarTime.setBackground(new Color(70, 130, 180));
         btnEditarTime.setForeground(Color.WHITE);
         btnEditarTime.setBorderPainted(false);
         btnEditarTime.setFocusPainted(false);
         btnEditarTime.addActionListener(this::editarTime);
 
-        JButton btnExcluirTime = new JButton("🗑️ Excluir Time");
+        JButton btnExcluirTime = new JButton("Excluir Time");
         btnExcluirTime.setBackground(new Color(220, 20, 60));
         btnExcluirTime.setForeground(Color.WHITE);
         btnExcluirTime.setBorderPainted(false);
@@ -143,7 +143,7 @@ public class TelaGerenciamento extends JFrame {
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout());
 
-        JButton btnAtualizar = new JButton("🔄 ATUALIZAR LISTA");
+        JButton btnAtualizar = new JButton("ATUALIZAR LISTA");
         btnAtualizar.setPreferredSize(new Dimension(180, 40));
         btnAtualizar.setBackground(new Color(60, 179, 113));
         btnAtualizar.setForeground(Color.WHITE);
@@ -152,7 +152,7 @@ public class TelaGerenciamento extends JFrame {
         btnAtualizar.setFocusPainted(false);
         btnAtualizar.addActionListener(e -> carregarTimes());
 
-        JButton btnVoltar = new JButton("🏠 VOLTAR");
+        JButton btnVoltar = new JButton("VOLTAR");
         btnVoltar.setPreferredSize(new Dimension(120, 40));
         btnVoltar.setBackground(new Color(128, 128, 128));
         btnVoltar.setForeground(Color.WHITE);
@@ -178,7 +178,7 @@ public class TelaGerenciamento extends JFrame {
 
             for (Time time : times) {
                 modeloTabelaTimes.addRow(new Object[]{
-                        time.getNome(), // MUDANÇA: Usando getNome() padronizado
+                        time.getNome(),
                         time.getEscalacao().size()
                 });
             }
@@ -187,6 +187,8 @@ public class TelaGerenciamento extends JFrame {
                     "Erro ao carregar times: " + e.getMessage(),
                     "Erro",
                     JOptionPane.ERROR_MESSAGE);
+            // Adicione esta linha para ver o erro completo no console também
+            e.printStackTrace();
         }
     }
 
@@ -213,7 +215,7 @@ public class TelaGerenciamento extends JFrame {
         }
     }
 
-    // MÉTODO EDITAR CORRIGIDO
+
     private void editarTime(ActionEvent e) {
         int selectedRow = tabelaTimes.getSelectedRow();
         if (selectedRow < 0) {
@@ -258,7 +260,7 @@ public class TelaGerenciamento extends JFrame {
         }
     }
 
-    // MÉTODO EXCLUIR CORRIGIDO
+
     private void excluirTime(ActionEvent e) {
         int selectedRow = tabelaTimes.getSelectedRow();
         if (selectedRow < 0) {
@@ -280,7 +282,7 @@ public class TelaGerenciamento extends JFrame {
 
         if (opcao == JOptionPane.YES_OPTION) {
             try {
-                // LÓGICA CORRETA: Chama um método do DAO para fazer o trabalho
+
                 timeDAO.removerTimePorNome(nomeTime);
 
                 JOptionPane.showMessageDialog(this,
