@@ -178,18 +178,10 @@ public class TelaGerenciamento extends JFrame {
 
             for (Time time : times) {
                 modeloTabelaTimes.addRow(new Object[]{
-                        time.getNomeEquipe(),
+                        time.getNome(), // MUDANÇA: Usando getNome() padronizado
                         time.getEscalacao().size()
                 });
             }
-
-            if (times.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Nenhum time cadastrado!",
-                        "Informação",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
                     "Erro ao carregar times: " + e.getMessage(),
@@ -221,6 +213,7 @@ public class TelaGerenciamento extends JFrame {
         }
     }
 
+    // MÉTODO EDITAR CORRIGIDO
     private void editarTime(ActionEvent e) {
         int selectedRow = tabelaTimes.getSelectedRow();
         if (selectedRow < 0) {
@@ -238,15 +231,11 @@ public class TelaGerenciamento extends JFrame {
 
         if (novoNome != null && !novoNome.trim().isEmpty() && !novoNome.equals(nomeAtual)) {
             try {
-                // Para simplificar, vamos recriar o time com o novo nome
                 Time time = timeDAO.buscarTimePorNome(nomeAtual);
                 if (time != null) {
-                    // Remove o time antigo
-                    removerTimeDoBanco(nomeAtual);
-
-                    // Cria novo time com novo nome
-                    time.setNomeEquipe(novoNome.trim());
-                    timeDAO.salvarTime(time);
+                    time.setNome(novoNome.trim());
+                    // LÓGICA CORRETA: Chama o método de atualização do DAO
+                    timeDAO.atualizarTime(time, time.getId());
 
                     JOptionPane.showMessageDialog(this,
                             "Nome do time atualizado com sucesso!",
@@ -269,6 +258,7 @@ public class TelaGerenciamento extends JFrame {
         }
     }
 
+    // MÉTODO EXCLUIR CORRIGIDO
     private void excluirTime(ActionEvent e) {
         int selectedRow = tabelaTimes.getSelectedRow();
         if (selectedRow < 0) {
@@ -290,7 +280,8 @@ public class TelaGerenciamento extends JFrame {
 
         if (opcao == JOptionPane.YES_OPTION) {
             try {
-                removerTimeDoBanco(nomeTime);
+                // LÓGICA CORRETA: Chama um método do DAO para fazer o trabalho
+                timeDAO.removerTimePorNome(nomeTime);
 
                 JOptionPane.showMessageDialog(this,
                         "Time excluído com sucesso!",
@@ -304,24 +295,6 @@ public class TelaGerenciamento extends JFrame {
                         "Erro ao excluir time: " + ex.getMessage(),
                         "Erro",
                         JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    private void removerTimeDoBanco(String nomeTime) throws SQLException {
-        // Método auxiliar para remover time do banco
-        // Implementação simplificada - na prática, deveria usar o ID
-        java.sql.Connection conn = database.DatabaseConnection.getConnection();
-
-        // Primeiro, busca o ID do time
-        String sqlBusca = "SELECT id FROM times WHERE nome = ?";
-        try (java.sql.PreparedStatement stmt = conn.prepareStatement(sqlBusca)) {
-            stmt.setString(1, nomeTime);
-            java.sql.ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                int timeId = rs.getInt("id");
-                timeDAO.removerTime(timeId);
             }
         }
     }

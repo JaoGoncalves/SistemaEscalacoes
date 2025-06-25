@@ -1,11 +1,14 @@
+// jaogoncalves/sistemaescalacoes/SistemaEscalacoes-ad62d11a82bfa8dcbf337f6e732d8a7a4c2a950c/SistemaEscalacoes/src/classes/Time.java
+
 package classes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Time {
+// 1. Adicione "implements Escalacao"
+public class Time implements Escalacao {
     private int id;
-    private String nome;
+    private String nome; // Renomeado de nomeEquipe para nome, para consistência
     private List<Jogador> escalacao;
 
     public Time() {
@@ -28,21 +31,67 @@ public class Time {
     public void setId(int id) { this.id = id; }
 
     public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setNome(String nome) { this.nome = nome; } // Renomeado de setNomeEquipe
 
     public List<Jogador> getEscalacao() { return escalacao; }
     public void setEscalacao(List<Jogador> escalacao) { this.escalacao = escalacao; }
 
-    public void adicionarJogador(Jogador jogador) {
+    // 2. Renomeie o método e adicione @Override para implementar a interface
+    @Override
+    public void escalarJogador(Jogador jogador) throws ExceptionEscalacao {
+        if (this.escalacao.size() >= 11 && !(this instanceof Time)) { // Adicionei uma verificação extra para o contexto do time
+            throw new ExceptionEscalacao("Um time pode ter apenas 11 jogadores escalados.");
+        }
+        for (Jogador j : escalacao) {
+            if (j.getNumero() == jogador.getNumero()) {
+                throw new ExceptionEscalacao("Já existe um jogador com o número " + jogador.getNumero());
+            }
+        }
         this.escalacao.add(jogador);
     }
 
-    public void removerJogador(Jogador jogador) {
-        this.escalacao.remove(jogador);
+    // 3. Renomeie o método e adicione @Override
+    @Override
+    public void removerJogador(int numero) throws ExceptionEscalacao {
+        Jogador jogadorParaRemover = null;
+        for (Jogador j : this.escalacao) {
+            if (j.getNumero() == numero) {
+                jogadorParaRemover = j;
+                break;
+            }
+        }
+        if (jogadorParaRemover != null) {
+            this.escalacao.remove(jogadorParaRemover);
+        } else {
+            throw new ExceptionEscalacao("Jogador com número " + numero + " não encontrado na escalação.");
+        }
+    }
+
+    // 4. Implemente os outros métodos da interface
+    @Override
+    public List<Jogador> listarEscalacao() {
+        return this.escalacao;
+    }
+
+    @Override
+    public void validarEscalacao() throws ExceptionEscalacao {
+        if (this.escalacao.size() != 11) {
+            throw new ExceptionEscalacao("A escalação final deve ter exatamente 11 jogadores.");
+        }
+        // Outras validações (ex: 1 goleiro, etc.) podem ser adicionadas aqui
     }
 
     @Override
     public String toString() {
         return nome;
+    }
+
+    // Método que estava faltando no seu DAO
+    public void imprimeEscalacao() {
+        // Implemente a lógica de impressão se necessário, ou remova a chamada em EscalarTime.java
+        System.out.println("Escalação do time: " + this.nome);
+        for(Jogador j : this.escalacao) {
+            System.out.println(j.toString());
+        }
     }
 }

@@ -178,7 +178,7 @@ public class TelaConsulta extends JFrame {
 
             for (Time time : times) {
                 modeloTabelaTimes.addRow(new Object[]{
-                        time.getNomeEquipe(),
+                        time.getNome(),
                         time.getEscalacao().size()
                 });
             }
@@ -215,10 +215,10 @@ public class TelaConsulta extends JFrame {
 
             if (time != null) {
                 modeloTabelaTimes.addRow(new Object[]{
-                        time.getNomeEquipe(),
+                        time.getNome(),
                         time.getEscalacao().size()
                 });
-                carregarJogadoresDoTime(time.getNomeEquipe());
+                carregarJogadoresDoTime(time.getNome());
             } else {
                 JOptionPane.showMessageDialog(this,
                         "Time não encontrado!",

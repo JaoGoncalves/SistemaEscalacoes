@@ -309,7 +309,7 @@ public class TelaCadastro extends JFrame {
                 return;
             }
 
-            timeAtual.setNomeEquipe(nomeTime);
+            timeAtual.setNome(nomeTime);
             timeDAO.salvarTime(timeAtual);
 
             JOptionPane.showMessageDialog(this,
