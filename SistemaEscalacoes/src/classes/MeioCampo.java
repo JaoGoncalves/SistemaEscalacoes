@@ -1,13 +1,21 @@
 package classes;
 
 public class MeioCampo extends Jogador {
-    // criação do construtor sobrecarregado
-    public MeioCampo(String nome, int numero)  {
+
+    public MeioCampo() {
+        super();
+    }
+
+    public MeioCampo(String nome, int numero) {
         super(nome, numero);
     }
 
+    public MeioCampo(int id, String nome, int numero, int timeId) {
+        super(id, nome, numero, timeId);
+    }
+
     @Override
-    public String getPosicao() {// metodo sobrescrito da Classe jogador
-        return "Meio Campo"; // irá retornar a posicao do jogador
+    public String getPosicao() {
+        return "Meio Campo";
     }
 }

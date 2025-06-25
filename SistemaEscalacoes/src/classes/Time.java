@@ -1,78 +1,48 @@
 package classes;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JOptionPane;
+public class Time {
+    private int id;
+    private String nome;
+    private List<Jogador> escalacao;
 
-public class Time implements Escalacao {
-    // Atributos
-    private String nomeEquipe;
-    // Criação do ArrayList, já instanciado
-    private ArrayList<Jogador> escalacao = new ArrayList<>();
-
-    // construtor
     public Time() {
-        this.nomeEquipe = getNomeEquipe();
+        this.escalacao = new ArrayList<>();
     }
 
-    // set para adicionar o nome do time
-    public void setNomeEquipe(String nomeEquipe) {
-        this.nomeEquipe = nomeEquipe;
+    public Time(String nome) {
+        this.nome = nome;
+        this.escalacao = new ArrayList<>();
     }
 
-    // get, irá retornar o nome da equipe
-    public String getNomeEquipe() {
-        return nomeEquipe;
+    public Time(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
+        this.escalacao = new ArrayList<>();
     }
 
-    @Override
-    // método sobrescrito, passando um paramêtro da classe Jogador
-    public void escalarJogador(Jogador jogador) throws ExceptionEscalacao { // chamada da exceção personalizada
+    // Getters e Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-        escalacao.add(jogador); // adiciona o jogador no ArrayList
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-        // imprime o nome do jogador, sua posição e número
-        System.out.println("Jogador escalado:" + jogador.getNome() + ",Pos:" + jogador.getPosicao() + ",N:"
-                + jogador.getNumero());
+    public List<Jogador> getEscalacao() { return escalacao; }
+    public void setEscalacao(List<Jogador> escalacao) { this.escalacao = escalacao; }
 
+    public void adicionarJogador(Jogador jogador) {
+        this.escalacao.add(jogador);
     }
 
-    @Override
-    // metodo sobrescrito. recebendo um paramêtro do tipo int
-    public void removerJogador(int numero) throws ExceptionEscalacao { // chamada da exceção personalizada
-        if (numero > 0 && numero < 100) {
-            escalacao.removeIf(jogador -> jogador.getNumero() == numero); // remove o elemento digitado pelo usuário
-            System.out.println("Jogador número " + numero + " removido"); // mostra a mensagem do nº jogador removido
-        } else { // caso nao encontre o nº do jogador, o sistema mostrá a mensagem abaixo
-            throw new ExceptionEscalacao("Jogador não encontrado. Remoção não realizada"); // // lança uma exceção se
-                                                                                           // não encontrar o jogador
-        }
-
-    }
-
-    @Override
-    // método sobrescrito da interface Escalacao
-    public void imprimeEscalacao() { // irá imprimir a escalação
-
-        if (escalacao.size() == 11) {
-            StringBuilder mensagem = new StringBuilder();
-            mensagem.append("A escalação do time ").append(getNomeEquipe())
-                    .append(" vem com os seguintes jogadores:\n\n");
-
-            for (Jogador jogador : escalacao) {
-                mensagem.append(jogador.getNome() + " Numero:" + jogador.getNumero()).append("\n"); // imprime o jogador
-                // escalado
-            }
-
-            JOptionPane.showMessageDialog(null, mensagem.toString());
-        } else {
-            JOptionPane.showMessageDialog(null, "Escalação Incompleta. Seu time deve conter 11 jogadores!");
-        }
+    public void removerJogador(Jogador jogador) {
+        this.escalacao.remove(jogador);
     }
 
     @Override
     public String toString() {
-        return "Time [nomeEquipe=" + nomeEquipe + "]";
+        return nome;
     }
-
 }

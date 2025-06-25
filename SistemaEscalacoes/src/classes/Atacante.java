@@ -1,13 +1,21 @@
 package classes;
 
 public class Atacante extends Jogador {
-    // criação do construtor sobrecarregado
-    public Atacante(String nome, int numero)  {
+
+    public Atacante() {
+        super();
+    }
+
+    public Atacante(String nome, int numero) {
         super(nome, numero);
     }
 
+    public Atacante(int id, String nome, int numero, int timeId) {
+        super(id, nome, numero, timeId);
+    }
+
     @Override
-    public String getPosicao() { // metodo sobrescrito da Classe jogador
-        return "Atacante"; // irá retornar a posicao do jogador
+    public String getPosicao() {
+        return "Atacante";
     }
 }

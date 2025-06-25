@@ -1,14 +1,13 @@
 package classes;
 
-// criação da interface
+import java.util.List;
+
 public interface Escalacao {
-    // criação do metodo escalar(irá adicionar um novo jogador), que sera chamado na
-    // classe Time
-    public void escalarJogador(Jogador jogador) throws ExceptionEscalacao;
+    void escalarJogador(Jogador jogador) throws ExceptionEscalacao;
 
-    // nesse método, iremos remover um jogador especifico
-    public void removerJogador(int numero) throws ExceptionEscalacao;
+    void removerJogador(int numero) throws ExceptionEscalacao;
 
-    // no metodo imprimeEscalacao, ira imprimir os jogadores escalados e seus nomes
-    public void imprimeEscalacao();
+    List<Jogador> listarEscalacao();
+
+    void validarEscalacao() throws ExceptionEscalacao;
 }

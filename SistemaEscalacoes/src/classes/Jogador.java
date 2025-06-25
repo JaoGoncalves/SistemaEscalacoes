@@ -1,25 +1,64 @@
 package classes;
 
-abstract class Jogador {
-    // adiciona os atributos da classe Jogador
+public abstract class Jogador {
+    protected int id;
     protected String nome;
     protected int numero;
+    protected String posicao;
+    protected int timeId;
 
-    // cria o construtor
+    public Jogador() {
+    }
+
     public Jogador(String nome, int numero) {
         this.nome = nome;
         this.numero = numero;
     }
 
-    public String getNome() { // criação do get, caso solicite o nome do jogador solicitado
+    public Jogador(int id, String nome, int numero, int timeId) {
+        this.id = id;
+        this.nome = nome;
+        this.numero = numero;
+        this.timeId = timeId;
+    }
+
+    // Getters e Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
         return nome;
     }
 
-    public int getNumero() { // igual o de cima, aqui irá retornar o número do jogador solicitado
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getNumero() {
         return numero;
     }
 
-    // método abstrato, cada subclasse irá apresentar uma diferente mensagem
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public int getTimeId() {
+        return timeId;
+    }
+
+    public void setTimeId(int timeId) {
+        this.timeId = timeId;
+    }
+
     public abstract String getPosicao();
 
+    @Override
+    public String toString() {
+        return nome + " (#" + numero + ") - " + getPosicao();
+    }
 }
