@@ -6,23 +6,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DataBaseConnection {
-    // 1. URL de conexão do MySQL
-    // Substitua 'localhost', '3306' e 'escalacoes_db' se necessário
     private static final String URL = "jdbc:mysql://localhost:3306/escalacoes_db?useSSL=false&serverTimezone=UTC";
 
     // 2. Credenciais do seu banco de dados MySQL
-    private static final String USER = "root"; // Coloque seu usuário aqui
-    private static final String PASSWORD = "2207"; // Coloque sua senha aqui
+    private static final String USER = "root"; //
+    private static final String PASSWORD = "";
 
     private static Connection connection = null;
 
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
-                // 3. Nome da classe do Driver do MySQL
+                // Nome da classe do Driver do MySQL
                 Class.forName("com.mysql.cj.jdbc.Driver");
 
-                // 4. Obter a conexão usando usuário e senha
+                //  Obtem a conexão usando usuário e senha
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
                 // A criação das tabelas só deve ocorrer se a conexão for nova
