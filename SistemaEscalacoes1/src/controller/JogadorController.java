@@ -2,9 +2,13 @@ package controller;
 
 import model.*;
 import dao.JogadorDAO;
+import dao.TimeDAO;
+
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JogadorController {
     private JogadorDAO jogadorDAO;
@@ -118,6 +122,30 @@ public class JogadorController {
                 return new Atacante();
             default:
                 throw new IllegalArgumentException("Posição inválida: " + posicao);
+        }
+    }
+
+    public List<Jogador> listarJogadoresComNomesDeTimes() {
+        try {
+            // Pega a lista de todos os jogadores
+            List<Jogador> jogadores = jogadorDAO.listarTodos();
+
+            // Pega a lista de todos os times para criar um "mapa" de ID -> Nome
+            TimeDAO timeDAO = new TimeDAO();
+            List<Time> times = timeDAO.listarTodos();
+            Map<Integer, String> mapaNomesTimes = times.stream()
+                    .collect(Collectors.toMap(Time::getId, Time::getNome));
+
+            // Para cada jogador, atribui o nome do time correspondente
+            for (Jogador jogador : jogadores) {
+                String nomeTime = mapaNomesTimes.getOrDefault(jogador.getTimeId(), "Time não encontrado");
+                jogador.setNomeTime(nomeTime);
+            }
+
+            return jogadores;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar jogadores: " + e.getMessage());
+            return null;
         }
     }
 

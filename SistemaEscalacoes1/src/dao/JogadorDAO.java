@@ -41,7 +41,7 @@ public class JogadorDAO {
     }
 
     public void deletar(int id) throws SQLException {
-        String sql = "DELETE FROM  jogadores WHERE id = ?";
+        String sql = "DELETE FROM jogadores WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

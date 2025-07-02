@@ -6,6 +6,7 @@ public abstract class Jogador {
     protected int numero;
     protected String posicao;
     protected int timeId;
+    protected String nomeTime;
 
     public Jogador() {
     }
@@ -56,6 +57,14 @@ public abstract class Jogador {
     }
 
     public abstract String getPosicao();
+
+    public String getNomeTime() {
+        return nomeTime;
+    }
+
+    public void setNomeTime(String nomeTime) {
+        this.nomeTime = nomeTime;
+    }
 
     @Override
     public String toString() {

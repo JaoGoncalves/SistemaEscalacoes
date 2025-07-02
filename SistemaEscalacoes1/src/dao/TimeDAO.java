@@ -14,7 +14,7 @@ public class TimeDAO {
     }
 
     public void inserir(Time time) throws SQLException {
-        String sql = "INSERT INTO times (nomes) VALUES (?)";
+        String sql = "INSERT INTO times (nome) VALUES (?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, time.getNome());
             stmt.executeUpdate();
@@ -27,7 +27,7 @@ public class TimeDAO {
     }
 
     public void atualizar(Time time) throws SQLException {
-        String sql = "UPDATE times SET nome = ? WHERE(?)";
+        String sql = "UPDATE times SET nome = ? WHERE id =?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, time.getNome());
             stmt.setInt(2, time.getId());

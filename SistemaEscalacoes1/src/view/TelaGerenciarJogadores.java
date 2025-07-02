@@ -7,17 +7,20 @@ import model.Time;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TelaGerenciarJogadores extends JFrame {
     private JogadorController jogadorController;
     private TimeController timeController;
+
+    // Componentes da UI
     private JTextField txtNome;
+    private JComboBox<String> comboPosicao;
     private JTextField txtNumero;
-    private JComboBox<String> cbPosicao;
-    private JComboBox<Time> cbTime;
+    private JComboBox<String> comboTime;
     private JTable tabela;
     private DefaultTableModel modeloTabela;
     private JButton btnAdicionar;
@@ -25,25 +28,106 @@ public class TelaGerenciarJogadores extends JFrame {
     private JButton btnExcluir;
     private JButton btnVoltar;
 
+    // Estado da seleção
+    private List<Jogador> listaDeJogadoresAtual;
+    private Jogador jogadorSelecionado = null;
+    private Map<String, Integer> timeNomesParaIds;
+
     public TelaGerenciarJogadores() {
+        super("Gerenciar Jogadores");
         this.jogadorController = new JogadorController();
         this.timeController = new TimeController();
-        inicializarComponentes();
+        carregarDadosIniciais();
         configurarLayout();
         configurarEventos();
         configurarJanela();
-        carregarTimes();
         atualizarTabela();
     }
 
-    private void inicializarComponentes() {
-        txtNome = new JTextField(15);
-        txtNumero = new JTextField(5);
-        cbPosicao = new JComboBox<>(jogadorController.getPosicoes());
-        cbTime = new JComboBox<>();
+    private void carregarDadosIniciais() {
+        List<Time> times = timeController.listarTimes();
+        if (times != null) {
+            timeNomesParaIds = times.stream()
+                    .collect(Collectors.toMap(Time::getNome, Time::getId));
+        } else {
+            timeNomesParaIds = new HashMap<>();
+            JOptionPane.showMessageDialog(this, "Erro ao carregar times!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-        // Configurar tabela
-        String[] colunas = { "ID", "Nome", "Número", "Posição", "Time" };
+    private void configurarLayout() {
+        setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(UITheme.BACKGROUND_COLOR);
+        getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Painel de Ações (Esquerda)
+        JPanel painelAcoes = new JPanel();
+        painelAcoes.setLayout(new BoxLayout(painelAcoes, BoxLayout.Y_AXIS));
+        painelAcoes.setBackground(UITheme.PANEL_COLOR);
+        painelAcoes.setBorder(UITheme.BORDER_PANEL);
+        painelAcoes.setPreferredSize(new Dimension(280, 0));
+
+        JLabel lblTituloForm = new JLabel("Novo Jogador");
+        lblTituloForm.setFont(UITheme.FONT_SUBTITULO);
+        lblTituloForm.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        txtNome = new JTextField();
+        comboPosicao = new JComboBox<>(new String[] { "Goleiro", "Zagueiro", "Lateral", "Meio Campo", "Atacante" });
+        txtNumero = new JTextField();
+        comboTime = new JComboBox<>();
+
+        painelAcoes.add(lblTituloForm);
+        painelAcoes.add(Box.createVerticalStrut(10));
+        painelAcoes.add(criarCampoFormulario("Nome:", txtNome));
+        painelAcoes.add(criarCampoFormulario("Posição:", comboPosicao));
+        painelAcoes.add(criarCampoFormulario("Número:", txtNumero));
+        painelAcoes.add(criarCampoFormulario("Time:", comboTime));
+
+        DefaultComboBoxModel<String> comboModel = (DefaultComboBoxModel<String>) comboTime.getModel();
+        timeNomesParaIds.keySet().stream().sorted().forEach(comboModel::addElement);
+
+        painelAcoes.add(Box.createVerticalStrut(15));
+        btnAdicionar = new JButton("Adicionar Jogador");
+        btnAdicionar.setFont(UITheme.FONT_BOTAO);
+        btnAdicionar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelAcoes.add(btnAdicionar);
+
+        painelAcoes.add(Box.createVerticalStrut(20));
+        painelAcoes.add(new JSeparator());
+        painelAcoes.add(Box.createVerticalStrut(20));
+
+        btnEditar = new JButton("Editar Jogador Selecionado");
+        btnEditar.setFont(UITheme.FONT_BOTAO);
+        btnEditar.setEnabled(false);
+        btnEditar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelAcoes.add(btnEditar);
+
+        painelAcoes.add(Box.createVerticalStrut(10));
+        btnExcluir = new JButton("Excluir Jogador Selecionado");
+        btnExcluir.setFont(UITheme.FONT_BOTAO);
+        btnExcluir.setEnabled(false);
+        btnExcluir.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelAcoes.add(btnExcluir);
+
+        painelAcoes.add(Box.createVerticalGlue());
+        btnVoltar = new JButton("Voltar ao Menu");
+        btnVoltar.setFont(UITheme.FONT_BOTAO);
+        btnVoltar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelAcoes.add(btnVoltar);
+
+        add(painelAcoes, BorderLayout.WEST);
+
+        // Painel da Tabela (Centro)
+        JPanel painelTabela = new JPanel(new BorderLayout());
+        painelTabela.setBackground(UITheme.PANEL_COLOR);
+        painelTabela.setBorder(UITheme.BORDER_PANEL);
+
+        JLabel lblTituloTabela = new JLabel("Jogadores Cadastrados");
+        lblTituloTabela.setFont(UITheme.FONT_SUBTITULO);
+        lblTituloTabela.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        painelTabela.add(lblTituloTabela, BorderLayout.NORTH);
+
+        String[] colunas = { "ID", "Nome", "Posição", "Número", "Time" };
         modeloTabela = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -51,272 +135,254 @@ public class TelaGerenciarJogadores extends JFrame {
             }
         };
         tabela = new JTable(modeloTabela);
+        tabela.setFont(UITheme.FONT_CORPO);
+        tabela.getTableHeader().setFont(UITheme.FONT_BOTAO);
+        tabela.setRowHeight(25);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        btnAdicionar = new JButton("Adicionar");
-        btnEditar = new JButton("Editar");
-        btnExcluir = new JButton("Excluir");
-        btnVoltar = new JButton("Voltar");
+        JScrollPane scrollPane = new JScrollPane(tabela);
+        painelTabela.add(scrollPane, BorderLayout.CENTER);
+
+        add(painelTabela, BorderLayout.CENTER);
     }
 
-    private void configurarLayout() {
-        setLayout(new BorderLayout());
+    private JPanel criarCampoFormulario(String label, JComponent componente) {
+        JPanel painelCampo = new JPanel();
+        painelCampo.setLayout(new BoxLayout(painelCampo, BoxLayout.Y_AXIS));
+        painelCampo.setBackground(UITheme.PANEL_COLOR);
+        painelCampo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Painel superior - formulário
-        JPanel painelSuperior = new JPanel(new GridBagLayout());
-        painelSuperior.setBorder(BorderFactory.createTitledBorder("Cadastro de Jogador"));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(UITheme.FONT_CORPO);
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Linha 1
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        painelSuperior.add(new JLabel("Nome:"), gbc);
-        gbc.gridx = 1;
-        painelSuperior.add(txtNome, gbc);
-        gbc.gridx = 2;
-        painelSuperior.add(new JLabel("Número:"), gbc);
-        gbc.gridx = 3;
-        painelSuperior.add(txtNumero, gbc);
+        componente.setFont(UITheme.FONT_CORPO);
+        componente.setAlignmentX(Component.LEFT_ALIGNMENT);
+        componente.setMaximumSize(new Dimension(Integer.MAX_VALUE, componente.getPreferredSize().height));
 
-        // Linha 2
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        painelSuperior.add(new JLabel("Posição:"), gbc);
-        gbc.gridx = 1;
-        painelSuperior.add(cbPosicao, gbc);
-        gbc.gridx = 2;
-        painelSuperior.add(new JLabel("Time:"), gbc);
-        gbc.gridx = 3;
-        painelSuperior.add(cbTime, gbc);
+        painelCampo.add(lbl);
+        painelCampo.add(Box.createVerticalStrut(5));
+        painelCampo.add(componente);
+        painelCampo.add(Box.createVerticalStrut(10));
 
-        // Linha 3 - botão
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 4;
-        gbc.anchor = GridBagConstraints.CENTER;
-        painelSuperior.add(btnAdicionar, gbc);
-
-        // Painel central - tabela
-        JScrollPane scrollPane = new JScrollPane(tabela);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Jogadores Cadastrados"));
-
-        // Painel inferior - botões
-        JPanel painelInferior = new JPanel(new FlowLayout());
-        painelInferior.add(btnEditar);
-        painelInferior.add(btnExcluir);
-        painelInferior.add(btnVoltar);
-
-        add(painelSuperior, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-        add(painelInferior, BorderLayout.SOUTH);
+        return painelCampo;
     }
 
     private void configurarEventos() {
-        btnAdicionar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                adicionarJogador();
-            }
+        btnAdicionar.addActionListener(e -> adicionarJogador());
+        btnEditar.addActionListener(e -> editarJogador());
+        btnExcluir.addActionListener(e -> excluirJogador());
+        btnVoltar.addActionListener(e -> {
+            new TelaPrincipal().setVisible(true);
+            dispose();
         });
 
-        btnEditar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editarJogador();
-            }
-        });
+        tabela.getSelectionModel().addListSelectionListener(e -> {
+            int linhaSelecionada = tabela.getSelectedRow();
+            boolean selecionado = linhaSelecionada != -1;
 
-        btnExcluir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                excluirJogador();
-            }
-        });
+            btnEditar.setEnabled(selecionado);
+            btnExcluir.setEnabled(selecionado);
 
-        btnVoltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new TelaPrincipal().setVisible(true);
-                dispose();
+            if (selecionado) {
+                int idJogador = (Integer) modeloTabela.getValueAt(linhaSelecionada, 0);
+                this.jogadorSelecionado = listaDeJogadoresAtual.stream()
+                        .filter(j -> j.getId() == idJogador)
+                        .findFirst()
+                        .orElse(null);
+            } else {
+                this.jogadorSelecionado = null;
             }
         });
     }
 
     private void adicionarJogador() {
-        try {
-            String nome = txtNome.getText().trim();
-            int numero = Integer.parseInt(txtNumero.getText().trim());
-            String posicao = (String) cbPosicao.getSelectedItem();
-            Time time = (Time) cbTime.getSelectedItem();
+        String nome = txtNome.getText().trim();
+        String posicao = (String) comboPosicao.getSelectedItem();
+        String numeroTexto = txtNumero.getText().trim();
+        String nomeTimeSelecionado = (String) comboTime.getSelectedItem();
 
-            if (time == null) {
-                JOptionPane.showMessageDialog(this, "Selecione um time!");
-                return;
-            }
-
-            if (jogadorController.criarJogador(nome, numero, posicao, time.getId())) {
-                limparCampos();
-                atualizarTabela();
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Digite um número válido!");
-        }
-    }
-
-    private void editarJogador() {
-        int linhaSelecionada = tabela.getSelectedRow();
-        if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um jogador para editar!");
+        if (nome.isEmpty() || posicao == null || numeroTexto.isEmpty() || nomeTimeSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos!", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Criar diálogo de edição
-        JDialog dialogoEdicao = new JDialog(this, "Editar Jogador", true);
-        dialogoEdicao.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-
-        // Obter dados atuais
-        int id = (Integer) modeloTabela.getValueAt(linhaSelecionada, 0);
-        String nomeAtual = (String) modeloTabela.getValueAt(linhaSelecionada, 1);
-        int numeroAtual = (Integer) modeloTabela.getValueAt(linhaSelecionada, 2);
-        String posicaoAtual = (String) modeloTabela.getValueAt(linhaSelecionada, 3);
-
-        // Componentes do diálogo
-        JTextField txtNomeEdit = new JTextField(nomeAtual, 15);
-        JTextField txtNumeroEdit = new JTextField(String.valueOf(numeroAtual), 5);
-        JComboBox<String> cbPosicaoEdit = new JComboBox<>(jogadorController.getPosicoes());
-        cbPosicaoEdit.setSelectedItem(posicaoAtual);
-        JComboBox<Time> cbTimeEdit = new JComboBox<>();
-
-        // Carregar times no combo
-        List<Time> times = timeController.listarTimes();
-        if (times != null) {
-            for (Time time : times) {
-                cbTimeEdit.addItem(time);
+        try {
+            int numero = Integer.parseInt(numeroTexto);
+            Integer timeId = timeNomesParaIds.get(nomeTimeSelecionado);
+            if (jogadorController.criarJogador(nome, numero, posicao, timeId)) {
+                limparFormularioJogador();
+                atualizarTabela();
             }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "O número do jogador deve ser um valor inteiro!", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // --- MÉTODO EDITARJOGADOR TOTALMENTE REESCRITO ---
+    private void editarJogador() {
+        if (this.jogadorSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um jogador para editar!", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
-        // Layout do diálogo
+        JDialog dialogoEdicao = new JDialog(this, "Editar Jogador", true);
+        dialogoEdicao.setLayout(new BorderLayout(10, 10));
+
+        // Painel principal do formulário com GridBagLayout
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        painelFormulario.setBackground(UITheme.PANEL_COLOR);
+        painelFormulario.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Cria e preenche os campos do formulário de edição
+        JTextField nomeField = new JTextField(jogadorSelecionado.getNome());
+        JComboBox<String> posicaoCombo = new JComboBox<>(
+                new String[] { "Goleiro", "Zagueiro", "Lateral", "Meio Campo", "Atacante" });
+        posicaoCombo.setSelectedItem(jogadorSelecionado.getPosicao());
+        JTextField numeroField = new JTextField(String.valueOf(jogadorSelecionado.getNumero()));
+        JComboBox<String> timeCombo = new JComboBox<>();
+        DefaultComboBoxModel<String> timeModel = (DefaultComboBoxModel<String>) timeCombo.getModel();
+        timeNomesParaIds.keySet().stream().sorted().forEach(timeModel::addElement);
+
+        String nomeTimeAtual = timeNomesParaIds.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(jogadorSelecionado.getTimeId()))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+        timeCombo.setSelectedItem(nomeTimeAtual);
+
+        // Adiciona os componentes ao painel com GridBagLayout
         gbc.gridx = 0;
         gbc.gridy = 0;
-        dialogoEdicao.add(new JLabel("Nome:"), gbc);
+        gbc.anchor = GridBagConstraints.WEST;
+        painelFormulario.add(new JLabel("Nome:"), gbc);
         gbc.gridx = 1;
-        dialogoEdicao.add(txtNomeEdit, gbc);
+        gbc.weightx = 1.0;
+        painelFormulario.add(nomeField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        dialogoEdicao.add(new JLabel("Número:"), gbc);
+        gbc.weightx = 0;
+        painelFormulario.add(new JLabel("Posição:"), gbc);
         gbc.gridx = 1;
-        dialogoEdicao.add(txtNumeroEdit, gbc);
+        gbc.weightx = 1.0;
+        painelFormulario.add(posicaoCombo, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        dialogoEdicao.add(new JLabel("Posição:"), gbc);
+        gbc.weightx = 0;
+        painelFormulario.add(new JLabel("Número:"), gbc);
         gbc.gridx = 1;
-        dialogoEdicao.add(cbPosicaoEdit, gbc);
+        gbc.weightx = 1.0;
+        painelFormulario.add(numeroField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        dialogoEdicao.add(new JLabel("Time:"), gbc);
+        gbc.weightx = 0;
+        painelFormulario.add(new JLabel("Time:"), gbc);
         gbc.gridx = 1;
-        dialogoEdicao.add(cbTimeEdit, gbc);
+        gbc.weightx = 1.0;
+        painelFormulario.add(timeCombo, gbc);
 
-        // Botões
-        JPanel painelBotoes = new JPanel(new FlowLayout());
+        // Painel de botões do diálogo
+        JPanel painelBotoesDialogo = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        painelBotoesDialogo.setBackground(UITheme.PANEL_COLOR);
         JButton btnSalvar = new JButton("Salvar");
         JButton btnCancelar = new JButton("Cancelar");
-        painelBotoes.add(btnSalvar);
-        painelBotoes.add(btnCancelar);
+        painelBotoesDialogo.add(btnSalvar);
+        painelBotoesDialogo.add(btnCancelar);
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        dialogoEdicao.add(painelBotoes, gbc);
-
-        // Eventos dos botões
         btnSalvar.addActionListener(e -> {
-            try {
-                String nome = txtNomeEdit.getText().trim();
-                int numero = Integer.parseInt(txtNumeroEdit.getText().trim());
-                String posicao = (String) cbPosicaoEdit.getSelectedItem();
-                Time time = (Time) cbTimeEdit.getSelectedItem();
+            String novoNome = nomeField.getText().trim();
+            String novaPosicao = (String) posicaoCombo.getSelectedItem();
+            String novoNumeroTexto = numeroField.getText().trim();
+            String novoNomeTime = (String) timeCombo.getSelectedItem();
 
-                if (time != null && jogadorController.atualizarJogador(id, nome, numero, posicao, time.getId())) {
-                    atualizarTabela();
+            if (novoNome.isEmpty() || novaPosicao == null || novoNumeroTexto.isEmpty() || novoNomeTime == null) {
+                JOptionPane.showMessageDialog(dialogoEdicao, "Todos os campos são obrigatórios!", "Aviso",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            try {
+                int novoNumero = Integer.parseInt(novoNumeroTexto);
+                Integer novoTimeId = timeNomesParaIds.get(novoNomeTime);
+
+                if (jogadorController.atualizarJogador(jogadorSelecionado.getId(), novoNome, novoNumero, novaPosicao,
+                        novoTimeId)) {
                     dialogoEdicao.dispose();
+                    atualizarTabela();
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(dialogoEdicao, "Digite um número válido!");
+                JOptionPane.showMessageDialog(dialogoEdicao, "O número deve ser um valor numérico válido.",
+                        "Erro de Formato", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         btnCancelar.addActionListener(e -> dialogoEdicao.dispose());
 
-        dialogoEdicao.pack();
+        dialogoEdicao.add(painelFormulario, BorderLayout.CENTER);
+        dialogoEdicao.add(painelBotoesDialogo, BorderLayout.SOUTH);
+        dialogoEdicao.pack(); // Ajusta o tamanho do diálogo ao conteúdo
         dialogoEdicao.setLocationRelativeTo(this);
         dialogoEdicao.setVisible(true);
     }
 
     private void excluirJogador() {
-        int linhaSelecionada = tabela.getSelectedRow();
-        if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um jogador para excluir!");
+        if (jogadorSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um jogador para excluir!", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int id = (Integer) modeloTabela.getValueAt(linhaSelecionada, 0);
-        if (jogadorController.deletarJogador(id)) {
-            atualizarTabela();
-        }
-    }
+        int resposta = JOptionPane.showConfirmDialog(this,
+                "Tem certeza que deseja deletar o jogador '" + jogadorSelecionado.getNome() + "'?",
+                "Confirmar Exclusão",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
 
-    private void carregarTimes() {
-        cbTime.removeAllItems();
-        List<Time> times = timeController.listarTimes();
-        if (times != null) {
-            for (Time time : times) {
-                cbTime.addItem(time);
+        if (resposta == JOptionPane.YES_OPTION) {
+            if (jogadorController.deletarJogador(jogadorSelecionado.getId())) {
+                atualizarTabela();
             }
         }
     }
 
     private void atualizarTabela() {
+        this.listaDeJogadoresAtual = jogadorController.listarJogadoresComNomesDeTimes();
+
         modeloTabela.setRowCount(0);
-        List<Jogador> jogadores = jogadorController.listarJogadores();
-        if (jogadores != null) {
-            List<Time> times = timeController.listarTimes();
-            for (Jogador jogador : jogadores) {
-                String nomeTime = "Time não encontrado";
-                if (times != null) {
-                    for (Time time : times) {
-                        if (time.getId() == jogador.getTimeId()) {
-                            nomeTime = time.getNome();
-                            break;
-                        }
-                    }
-                }
-                Object[] linha = { jogador.getId(), jogador.getNome(), jogador.getNumero(),
-                        jogador.getPosicao(), nomeTime };
-                modeloTabela.addRow(linha);
+        if (listaDeJogadoresAtual != null) {
+            for (Jogador jogador : listaDeJogadoresAtual) {
+                modeloTabela.addRow(new Object[] {
+                        jogador.getId(),
+                        jogador.getNome(),
+                        jogador.getPosicao(),
+                        jogador.getNumero(),
+                        jogador.getNomeTime()
+                });
             }
         }
     }
 
-    private void limparCampos() {
+    private void limparFormularioJogador() {
         txtNome.setText("");
         txtNumero.setText("");
-        cbPosicao.setSelectedIndex(0);
-        if (cbTime.getItemCount() > 0) {
-            cbTime.setSelectedIndex(0);
+        comboPosicao.setSelectedIndex(0);
+        if (comboTime.getItemCount() > 0) {
+            comboTime.setSelectedIndex(0);
         }
     }
 
     private void configurarJanela() {
-        setTitle("Gerenciar Jogadores");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1024, 768);
         setLocationRelativeTo(null);
     }
 }

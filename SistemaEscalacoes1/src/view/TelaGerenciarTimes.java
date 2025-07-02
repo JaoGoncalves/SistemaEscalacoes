@@ -5,8 +5,6 @@ import model.Time;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class TelaGerenciarTimes extends JFrame {
@@ -18,20 +16,90 @@ public class TelaGerenciarTimes extends JFrame {
     private JButton btnEditar;
     private JButton btnExcluir;
     private JButton btnVoltar;
+    private Time timeSelecionado = null;
 
     public TelaGerenciarTimes() {
+        super("Gerenciar Times");
         this.timeController = new TimeController();
-        inicializarComponentes();
         configurarLayout();
         configurarEventos();
         configurarJanela();
         atualizarTabela();
     }
 
-    private void inicializarComponentes() {
-        txtNome = new JTextField(20);
+    private void configurarLayout() {
+        setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(UITheme.BACKGROUND_COLOR);
+        getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Configurar tabela
+        // PAINEL DE AÇÕES (ESQUERDA)
+        JPanel painelAcoes = new JPanel();
+        painelAcoes.setLayout(new BoxLayout(painelAcoes, BoxLayout.Y_AXIS));
+        painelAcoes.setBackground(UITheme.PANEL_COLOR);
+        painelAcoes.setBorder(UITheme.BORDER_PANEL);
+        painelAcoes.setMaximumSize(new Dimension(250, Integer.MAX_VALUE));
+
+        // Formulário de Adicionar/Editar
+        JLabel lblTituloForm = new JLabel("Novo Time");
+        lblTituloForm.setFont(UITheme.FONT_SUBTITULO);
+        lblTituloForm.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel lblNome = new JLabel("Nome do Time:");
+        lblNome.setFont(UITheme.FONT_CORPO);
+        lblNome.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        txtNome = new JTextField();
+        txtNome.setFont(UITheme.FONT_CORPO);
+        txtNome.setAlignmentX(Component.LEFT_ALIGNMENT);
+        txtNome.setMaximumSize(new Dimension(Integer.MAX_VALUE, txtNome.getPreferredSize().height));
+
+        btnAdicionar = new JButton("Adicionar");
+        btnAdicionar.setFont(UITheme.FONT_BOTAO);
+        btnAdicionar.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Botões de Ação
+        btnEditar = new JButton("Editar Time Selecionado");
+        btnEditar.setFont(UITheme.FONT_BOTAO);
+        btnEditar.setEnabled(false);
+        btnEditar.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        btnExcluir = new JButton("Excluir Time Selecionado");
+        btnExcluir.setFont(UITheme.FONT_BOTAO);
+        btnExcluir.setEnabled(false);
+        btnExcluir.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        btnVoltar = new JButton("Voltar ao Menu");
+        btnVoltar.setFont(UITheme.FONT_BOTAO);
+        btnVoltar.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        painelAcoes.add(lblTituloForm);
+        painelAcoes.add(Box.createVerticalStrut(10));
+        painelAcoes.add(lblNome);
+        painelAcoes.add(Box.createVerticalStrut(5));
+        painelAcoes.add(txtNome);
+        painelAcoes.add(Box.createVerticalStrut(10));
+        painelAcoes.add(btnAdicionar);
+        painelAcoes.add(Box.createVerticalStrut(20));
+        painelAcoes.add(new JSeparator());
+        painelAcoes.add(Box.createVerticalStrut(20));
+        painelAcoes.add(btnEditar);
+        painelAcoes.add(Box.createVerticalStrut(10));
+        painelAcoes.add(btnExcluir);
+        painelAcoes.add(Box.createVerticalGlue());
+        painelAcoes.add(btnVoltar);
+
+        add(painelAcoes, BorderLayout.WEST);
+
+        // PAINEL DA TABELA (CENTRO)
+        JPanel painelTabela = new JPanel(new BorderLayout());
+        painelTabela.setBackground(UITheme.PANEL_COLOR);
+        painelTabela.setBorder(UITheme.BORDER_PANEL);
+
+        JLabel lblTituloTabela = new JLabel("Times Cadastrados");
+        lblTituloTabela.setFont(UITheme.FONT_SUBTITULO);
+        lblTituloTabela.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        painelTabela.add(lblTituloTabela, BorderLayout.NORTH);
+
         String[] colunas = { "ID", "Nome do Time" };
         modeloTabela = new DefaultTableModel(colunas, 0) {
             @Override
@@ -40,66 +108,39 @@ public class TelaGerenciarTimes extends JFrame {
             }
         };
         tabela = new JTable(modeloTabela);
+        tabela.setFont(UITheme.FONT_CORPO);
+        tabela.getTableHeader().setFont(UITheme.FONT_BOTAO);
+        tabela.setRowHeight(25);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        btnAdicionar = new JButton("Adicionar");
-        btnEditar = new JButton("Editar");
-        btnExcluir = new JButton("Excluir");
-        btnVoltar = new JButton("Voltar");
-    }
-
-    private void configurarLayout() {
-        setLayout(new BorderLayout());
-
-        // Painel superior - formulário
-        JPanel painelSuperior = new JPanel(new FlowLayout());
-        painelSuperior.setBorder(BorderFactory.createTitledBorder("Cadastro de Time"));
-        painelSuperior.add(new JLabel("Nome:"));
-        painelSuperior.add(txtNome);
-        painelSuperior.add(btnAdicionar);
-
-        // Painel central - tabela
         JScrollPane scrollPane = new JScrollPane(tabela);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Times Cadastrados"));
+        painelTabela.add(scrollPane, BorderLayout.CENTER);
 
-        // Painel inferior - botões
-        JPanel painelInferior = new JPanel(new FlowLayout());
-        painelInferior.add(btnEditar);
-        painelInferior.add(btnExcluir);
-        painelInferior.add(btnVoltar);
-
-        add(painelSuperior, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-        add(painelInferior, BorderLayout.SOUTH);
+        add(painelTabela, BorderLayout.CENTER);
     }
 
     private void configurarEventos() {
-        btnAdicionar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                adicionarTime();
-            }
+        btnAdicionar.addActionListener(e -> adicionarTime());
+        btnEditar.addActionListener(e -> editarTime());
+        btnExcluir.addActionListener(e -> excluirTime());
+        btnVoltar.addActionListener(e -> {
+            new TelaPrincipal().setVisible(true);
+            dispose();
         });
 
-        btnEditar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editarTime();
-            }
-        });
+        tabela.getSelectionModel().addListSelectionListener(e -> {
+            int linhaSelecionada = tabela.getSelectedRow();
+            boolean selecionado = linhaSelecionada != -1;
 
-        btnExcluir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                excluirTime();
-            }
-        });
+            btnEditar.setEnabled(selecionado);
+            btnExcluir.setEnabled(selecionado);
 
-        btnVoltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new TelaPrincipal().setVisible(true);
-                dispose();
+            if (selecionado) {
+                int id = (Integer) modeloTabela.getValueAt(linhaSelecionada, 0);
+                String nome = (String) modeloTabela.getValueAt(linhaSelecionada, 1);
+                timeSelecionado = new Time(id, nome);
+            } else {
+                timeSelecionado = null;
             }
         });
     }
@@ -113,33 +154,37 @@ public class TelaGerenciarTimes extends JFrame {
     }
 
     private void editarTime() {
-        int linhaSelecionada = tabela.getSelectedRow();
-        if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um time para editar!");
+        if (timeSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um time para editar!", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int id = (Integer) modeloTabela.getValueAt(linhaSelecionada, 0);
-        String nomeAtual = (String) modeloTabela.getValueAt(linhaSelecionada, 1);
-
-        String novoNome = JOptionPane.showInputDialog(this, "Digite o novo nome:", nomeAtual);
+        String novoNome = JOptionPane.showInputDialog(this, "Digite o novo nome para:", timeSelecionado.getNome());
         if (novoNome != null && !novoNome.trim().isEmpty()) {
-            if (timeController.atualizarTime(id, novoNome)) {
+            if (timeController.atualizarTime(timeSelecionado.getId(), novoNome)) {
                 atualizarTabela();
             }
         }
     }
 
     private void excluirTime() {
-        int linhaSelecionada = tabela.getSelectedRow();
-        if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um time para excluir!");
+        if (timeSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um time para excluir!", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int id = (Integer) modeloTabela.getValueAt(linhaSelecionada, 0);
-        if (timeController.deletarTime(id)) {
-            atualizarTabela();
+        int resposta = JOptionPane.showConfirmDialog(this,
+                "Tem certeza que deseja deletar o time '" + timeSelecionado.getNome()
+                        + "'?\nTodos os jogadores do time também serão removidos.",
+                "Confirmar Exclusão",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (resposta == JOptionPane.YES_OPTION) {
+            if (timeController.deletarTime(timeSelecionado.getId())) {
+                atualizarTabela();
+            }
         }
     }
 
@@ -148,16 +193,14 @@ public class TelaGerenciarTimes extends JFrame {
         List<Time> times = timeController.listarTimes();
         if (times != null) {
             for (Time time : times) {
-                Object[] linha = { time.getId(), time.getNome() };
-                modeloTabela.addRow(linha);
+                modeloTabela.addRow(new Object[] { time.getId(), time.getNome() });
             }
         }
     }
 
     private void configurarJanela() {
-        setTitle("Gerenciar Times");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(800, 600);
         setLocationRelativeTo(null);
     }
 }
